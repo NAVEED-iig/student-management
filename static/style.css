@@ -1,0 +1,283 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.login-container {
+    width: 100%;
+    padding: 20px;
+}
+
+
+.login-box {
+    width: 400px;
+    max-width: 100%;
+
+    margin: auto;
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+    text-align: center;
+}
+
+
+.logo {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+
+.login-box h1 {
+    font-size: 28px;
+    color: #333;
+
+    margin-bottom: 10px;
+}
+
+
+.welcome {
+    color: #777;
+    font-size: 14px;
+
+    margin-bottom: 30px;
+}
+
+
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+
+.input-group label {
+    display: block;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    color: #444;
+
+    margin-bottom: 7px;
+}
+
+
+.input-group input {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    outline: none;
+}
+
+
+.input-group input:focus {
+    border-color: #667eea;
+
+    box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+}
+
+
+button {
+    width: 100%;
+
+    padding: 13px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #667eea;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+
+button:hover {
+    background: #5568d9;
+}
+
+
+.error {
+    background: #ffe5e5;
+
+    color: #d60000;
+
+    padding: 10px;
+
+    border-radius: 6px;
+
+    margin-bottom: 20px;
+
+    font-size: 14px;
+}
+
+
+.demo {
+    margin-top: 20px;
+
+    font-size: 13px;
+
+    color: #888;
+}
+
+.student-container {
+    width: 100%;
+    padding: 30px;
+}
+
+
+.student-box {
+    width: 600px;
+    max-width: 100%;
+
+    margin: auto;
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+
+.student-box h1 {
+    text-align: center;
+
+    color: #333;
+
+    margin-bottom: 10px;
+}
+
+
+.subtitle {
+    text-align: center;
+
+    color: #777;
+
+    margin-bottom: 30px;
+}
+
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+
+.input-group label {
+    display: block;
+
+    font-weight: bold;
+
+    margin-bottom: 7px;
+
+    color: #444;
+}
+
+
+.input-group input,
+.input-group select {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    outline: none;
+}
+
+
+.input-group input:focus,
+.input-group select:focus {
+
+    border-color: #667eea;
+
+    box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+}
+
+
+.student-box button {
+
+    width: 100%;
+
+    padding: 13px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #667eea;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+.student-box button:hover {
+
+    background: #5568d9;
+}
+
+
+.back-link {
+
+    text-align: center;
+
+    margin-top: 20px;
+}
+
+
+.back-link a {
+
+    color: #667eea;
+
+    text-decoration: none;
+
+    font-weight: bold;
+}
+
