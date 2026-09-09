@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Search Student</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="search-page">
+
+    <h1>🔍 Search Student</h1>
+
+    <p>Search student by name or roll number</p>
+
+
+    <form method="POST">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Enter name or roll number"
+            required
+        >
+
+        <button type="submit">
+            Search
+        </button>
+
+    </form>
+
+
+    {% if students %}
+
+    <h2>Search Results</h2>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Roll No</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Semester</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for student in students %}
+
+                <tr>
+
+                    <td>{{ student.roll_no }}</td>
+
+                    <td>{{ student.name }}</td>
+
+                    <td>{{ student.department }}</td>
+
+                    <td>{{ student.semester }}</td>
+
+                    <td>{{ student.email }}</td>
+
+                    <td>{{ student.phone }}</td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% elif request.method == 'POST' %}
+
+        <p class="no-result">
+            ❌ No student found.
+        </p>
+
+    {% endif %}
+
+
+    <br>
+
+    <a href="{{ url_for('dashboard') }}">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+</body>
+
+</html>

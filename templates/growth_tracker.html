@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Growth Tracker</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="growth-page">
+
+    <h1>📈 Student Growth Tracker</h1>
+
+    <p>Track student performance semester by semester</p>
+
+
+    <!-- Student Selection -->
+
+    <form method="POST">
+
+        <label>Select Student</label>
+
+        <select name="roll_no" required>
+
+            <option value="">-- Select Student --</option>
+
+            {% for student in students %}
+
+                <option value="{{ student.roll_no }}"
+                    {% if selected_student and
+                          selected_student.roll_no == student.roll_no %}
+                        selected
+                    {% endif %}>
+
+                    {{ student.roll_no }} - {{ student.name }}
+
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+        <button type="submit">
+            View Growth
+        </button>
+
+    </form>
+
+
+    {% if selected_student %}
+
+        <div class="student-info">
+
+            <h2>
+                {{ selected_student.name }}
+            </h2>
+
+            <p>
+                Roll No: {{ selected_student.roll_no }}
+            </p>
+
+        </div>
+
+
+        {% if growth_data %}
+
+            <h2>Semester Performance</h2>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Semester</th>
+                        <th>Marks</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for data in growth_data %}
+
+                    <tr>
+
+                        <td>
+                            Semester {{ data.semester }}
+                        </td>
+
+                        <td>
+                            {{ data.marks }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+
+            <!-- Graph -->
+
+            <div class="chart-container">
+
+                <canvas id="growthChart"></canvas>
+
+            </div>
+
+
+        {% else %}
+
+            <p>
+                ❌ No growth data available for this student.
+            </p>
+
+        {% endif %}
+
+    {% endif %}
+
+
+    <br>
+
+    <a href="{{ url_for('dashboard') }}">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+
+<!-- Chart.js -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+{% if growth_data %}
+
+<script>
+
+    const growthData = {{ growth_data | tojson }};
+
+    const semesters = growthData.map(data =>
+        "Semester " + data.semester
+    );
+
+    const marks = growthData.map(data =>
+        Number(data.marks)
+    );
+
+    const ctx = document
+        .getElementById('growthChart')
+        .getContext('2d');
+
+    new Chart(ctx, {
+
+        type: 'line',
+
+        data: {
+
+            labels: semesters,
+
+            datasets: [{
+
+                label: 'Marks',
+
+                data: marks,
+
+                borderWidth: 3,
+
+                tension: 0.3,
+
+                fill: false
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            scales: {
+
+                y: {
+
+                    beginAtZero: true,
+
+                    max: 100
+
+                }
+
+            }
+
+        }
+
+    });
+
+</script>
+{% endif %}
+
+</body>
+
+</html>
