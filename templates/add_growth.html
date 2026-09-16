@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Add Growth</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+
+  <body>
+    <div class="growth-page">
+      <h1>➕ Add Student Growth</h1>
+
+      <p>Select a student and add semester marks</p>
+
+      {% if message %}
+      <p class="success">{{ message }}</p>
+      {% endif %}
+
+      <form method="POST">
+        <label>Select Student</label>
+
+        <select name="roll_no" required>
+          <option value="">-- Select Student --</option>
+
+          {% for student in students %}
+
+          <option value="{{ student.roll_no }}">
+            {{ student.roll_no }} - {{ student.name }}
+          </option>
+
+          {% endfor %}
+        </select>
+
+        <label>Semester</label>
+
+        <select name="semester" required>
+          <option value="">-- Select Semester --</option>
+
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+        </select>
+
+        <label>Marks</label>
+
+        <input
+          type="number"
+          name="marks"
+          min="0"
+          max="100"
+          step="0.01"
+          placeholder="Enter marks"
+          required
+        />
+
+        <button type="submit">Add Growth</button>
+      </form>
+
+      <h2>Students</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Roll No</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Semester</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for student in students %}
+
+          <tr>
+            <td>{{ student.roll_no }}</td>
+            <td>{{ student.name }}</td>
+            <td>{{ student.department }}</td>
+            <td>{{ student.semester }}</td>
+          </tr>
+
+          {% else %}
+
+          <tr>
+            <td colspan="4">No students found.</td>
+          </tr>
+
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <br />
+
+      <a href="{{ url_for('growth_tracker') }}"> 📈 View Growth Tracker </a>
+
+      &nbsp;|&nbsp;
+
+      <a href="{{ url_for('dashboard') }}"> ← Back to Dashboard </a>
+    </div>
+  </body>
+</html>

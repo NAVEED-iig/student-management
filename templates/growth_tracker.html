@@ -1,210 +1,182 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Growth Tracker</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
-</head>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
 
-<body>
+  <body>
+    <div class="growth-page">
+      <h1>📈 Student Growth Tracker</h1>
 
-<div class="growth-page">
+      <p>Track student performance semester by semester</p>
 
-    <h1>📈 Student Growth Tracker</h1>
+      <!-- Student Selection -->
 
-    <p>Track student performance semester by semester</p>
-
-
-    <!-- Student Selection -->
-
-    <form method="POST">
-
+      <form method="POST">
         <label>Select Student</label>
 
         <select name="roll_no" required>
+          <option value="">-- Select Student --</option>
 
-            <option value="">-- Select Student --</option>
+          {% for student in students %}
 
-            {% for student in students %}
+          <option
+            value="{{ student.roll_no }}"
+            {%
+            if
+            selected_student
+            and
+            selected_student.roll_no == student.roll_no
+            %}
+            selected
+            {%
+            endif
+            %}
+          >
+            {{ student.roll_no }} - {{ student.name }}
+          </option>
 
-                <option value="{{ student.roll_no }}"
-                    {% if selected_student and
-                          selected_student.roll_no == student.roll_no %}
-                        selected
-                    {% endif %}>
-
-                    {{ student.roll_no }} - {{ student.name }}
-
-                </option>
-
-            {% endfor %}
-
+          {% endfor %}
         </select>
 
-        <button type="submit">
-            View Growth
-        </button>
+        <button type="submit">View Growth</button>
+      </form>
 
-    </form>
+      {% if selected_student %}
 
+      <div class="student-info">
+        <h2>{{ selected_student.name }}</h2>
 
-    {% if selected_student %}
+        <p>Roll No: {{ selected_student.roll_no }}</p>
+      </div>
 
-        <div class="student-info">
+      {% if growth_data %}
 
-            <h2>
-                {{ selected_student.name }}
-            </h2>
+      <h2>Semester Performance</h2>
 
-            <p>
-                Roll No: {{ selected_student.roll_no }}
-            </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Semester</th>
+            <th>Marks</th>
+          </tr>
+        </thead>
 
-        </div>
+        <tbody>
+          {% for data in growth_data %}
 
+          <tr>
+            <td>Semester {{ data.semester }}</td>
 
-        {% if growth_data %}
+            <td>{{ data.marks }}</td>
+          </tr>
 
-            <h2>Semester Performance</h2>
+          {% endfor %}
+        </tbody>
+      </table>
 
-            <table>
+      <!-- Graph -->
 
-                <thead>
+      <div class="chart-container">
+        <canvas id="growthChart"></canvas>
+      </div>
 
-                    <tr>
-                        <th>Semester</th>
-                        <th>Marks</th>
-                    </tr>
+      {% else %}
 
-                </thead>
+      <p>❌ No growth data available for this student.</p>
 
-                <tbody>
+      {% endif %} {% endif %}
 
-                    {% for data in growth_data %}
+      <br />
 
-                    <tr>
+      <br />
 
-                        <td>
-                            Semester {{ data.semester }}
-                        </td>
+      <a href="{{ url_for('add_growth') }}"> ➕ Add Growth </a>
 
-                        <td>
-                            {{ data.marks }}
-                        </td>
+      &nbsp;|&nbsp;
 
-                    </tr>
+      <a href="{{ url_for('dashboard') }}"> ← Back to Dashboard </a>
+    </div>
 
-                    {% endfor %}
+    <!-- Chart.js -->
 
-                </tbody>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-            </table>
+    {% if growth_data %}
 
+    <script id="growth-data" type="application/json">
+      {{ growth_data | tojson }}
+    </script>
 
-            <!-- Graph -->
+    <script>
+      const growthData = JSON.parse(
+        document.getElementById('growth-data').textContent
+      );
 
-            <div class="chart-container">
+      const semesters = growthData.map(data =>
+          "Semester " + data.semester
+      );
 
-                <canvas id="growthChart"></canvas>
+      const marks = growthData.map(data =>
+          Number(data.marks)
+      );
 
-            </div>
+      const ctx = document
+          .getElementById('growthChart')
+          .getContext('2d');
 
+      new Chart(ctx, {
 
-        {% else %}
+          type: 'line',
 
-            <p>
-                ❌ No growth data available for this student.
-            </p>
+          data: {
 
-        {% endif %}
+              labels: semesters,
 
+              datasets: [{
+
+                  label: 'Marks',
+
+                  data: marks,
+
+                  borderWidth: 3,
+
+                  tension: 0.3,
+
+                  fill: false
+
+              }]
+
+          },
+
+          options: {
+
+              responsive: true,
+
+              scales: {
+
+                  y: {
+
+                      beginAtZero: true,
+
+                      max: 100
+
+                  }
+
+              }
+
+          }
+
+      });
+    </script>
     {% endif %}
-
-
-    <br>
-
-    <a href="{{ url_for('dashboard') }}">
-        ← Back to Dashboard
-    </a>
-
-</div>
-
-
-<!-- Chart.js -->
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
-{% if growth_data %}
-
-<script>
-
-    const growthData = {{ growth_data | tojson }};
-
-    const semesters = growthData.map(data =>
-        "Semester " + data.semester
-    );
-
-    const marks = growthData.map(data =>
-        Number(data.marks)
-    );
-
-    const ctx = document
-        .getElementById('growthChart')
-        .getContext('2d');
-
-    new Chart(ctx, {
-
-        type: 'line',
-
-        data: {
-
-            labels: semesters,
-
-            datasets: [{
-
-                label: 'Marks',
-
-                data: marks,
-
-                borderWidth: 3,
-
-                tension: 0.3,
-
-                fill: false
-
-            }]
-
-        },
-
-        options: {
-
-            responsive: true,
-
-            scales: {
-
-                y: {
-
-                    beginAtZero: true,
-
-                    max: 100
-
-                }
-
-            }
-
-        }
-
-    });
-
-</script>
-{% endif %}
-
-</body>
-
+  </body>
 </html>
