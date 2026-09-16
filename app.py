@@ -92,6 +92,139 @@ def add_student():
 
     return render_template('add_student.html')
 
+@app.route('/students')
+def students():
+
+    if 'user' not in session:
+        return redirect(url_for('login'))
+
+    connection = get_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT roll_no, name, department, semester, email, phone "
+        "FROM students ORDER BY roll_no"
+    )
+    students = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    return render_template('students.html', students=students)
+
+@app.route('/search_student', methods=['GET', 'POST'])
+def search_student():
+
+    if 'user' not in session:
+        return redirect(url_for('login'))
+
+    students = None
+
+    if request.method == 'POST':
+
+        search = request.form['search']
+
+        connection = get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        query = """
+            SELECT roll_no, name, department, semester, email, phone
+            FROM students
+            WHERE name LIKE %s OR roll_no LIKE %s
+        """
+
+        like_term = f"%{search}%"
+
+        cursor.execute(query, (like_term, like_term))
+
+        students = cursor.fetchall()
+
+        cursor.close()
+        connection.close()
+
+    return render_template('search_student.html', students=students)
+
+@app.route('/add_growth', methods=['GET', 'POST'])
+def add_growth():
+
+    if 'user' not in session:
+        return redirect(url_for('login'))
+
+    connection = get_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT roll_no, name, department, semester "
+        "FROM students ORDER BY roll_no"
+    )
+    students = cursor.fetchall()
+
+    message = None
+
+    if request.method == 'POST':
+
+        roll_no = request.form['roll_no']
+        semester = request.form['semester']
+        marks = request.form['marks']
+
+        cursor.execute(
+            "INSERT INTO growth (roll_no, semester, marks) VALUES (%s, %s, %s)",
+            (roll_no, semester, marks)
+        )
+
+        connection.commit()
+
+        message = "Growth record added successfully."
+
+    cursor.close()
+    connection.close()
+
+    return render_template(
+        'add_growth.html',
+        students=students,
+        message=message
+    )
+    
+@app.route('/growth_tracker', methods=['GET', 'POST'])
+def growth_tracker():
+
+    if 'user' not in session:
+        return redirect(url_for('login'))
+
+    connection = get_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    cursor.execute("SELECT roll_no, name FROM students")
+    students = cursor.fetchall()
+
+    selected_student = None
+    growth_data = None
+
+    if request.method == 'POST':
+
+        roll_no = request.form['roll_no']
+
+        cursor.execute(
+            "SELECT roll_no, name FROM students WHERE roll_no = %s",
+            (roll_no,)
+        )
+        selected_student = cursor.fetchone()
+
+        cursor.execute(
+            "SELECT semester, marks FROM growth WHERE roll_no = %s ORDER BY semester",
+            (roll_no,)
+        )
+        growth_data = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    return render_template(
+        'growth_tracker.html',
+        students=students,
+        selected_student=selected_student,
+        growth_data=growth_data
+    )
 
 @app.route('/logout')
 def logout():

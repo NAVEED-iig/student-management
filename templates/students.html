@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Students</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='dashboard.css') }}"
+    />
+  </head>
+
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="logo">🎓</div>
+
+        <h2>Student Management</h2>
+
+        <nav>
+          <a href="{{ url_for('dashboard') }}"> 🏠 Dashboard </a>
+
+          <a href="{{ url_for('add_student') }}"> ➕ Add Student </a>
+
+          <a href="{{ url_for('students') }}" class="active"> 👨‍🎓 Students </a>
+
+          <a href="{{ url_for('search_student') }}"> 🔍 Search Student </a>
+
+          <a href="{{ url_for('growth_tracker') }}"> 📈 Growth Tracker </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <a href="#"> ⚙ Settings </a>
+
+          <a href="{{ url_for('logout') }}"> 🚪 Logout </a>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div>
+            <h1>Students</h1>
+            <p>All registered students</p>
+          </div>
+
+          <div class="user-info">👤 {{ session['user'] }}</div>
+        </header>
+
+        <section class="section">
+          <div class="section-heading">
+            <h2>Student List</h2>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Roll No</th>
+                  <th>Name</th>
+                  <th>Department</th>
+                  <th>Semester</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {% for student in students %}
+
+                <tr>
+                  <td>{{ student.roll_no }}</td>
+                  <td>{{ student.name }}</td>
+                  <td>{{ student.department }}</td>
+                  <td>{{ student.semester }}</td>
+                  <td>{{ student.email }}</td>
+                  <td>{{ student.phone }}</td>
+                </tr>
+
+                {% else %}
+
+                <tr>
+                  <td colspan="6">No students found.</td>
+                </tr>
+
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
