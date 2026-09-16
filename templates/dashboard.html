@@ -1,301 +1,189 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
 
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Student Management Dashboard</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='dashboard.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='dashboard.css') }}"
+    />
+  </head>
 
-</head>
-
-<body>
-
+  <body>
     <div class="dashboard-container">
+      <!-- Sidebar -->
 
-        <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="logo">🎓</div>
 
-        <aside class="sidebar">
+        <h2>Student Management</h2>
 
-            <div class="logo">
-                🎓
+        <nav>
+          <a href="{{ url_for('dashboard') }}" class="active"> 🏠 Dashboard </a>
+
+          <a href="{{ url_for('add_student') }}"> ➕ Add Student </a>
+
+          <a href="{{ url_for('students') }}"> 👨‍🎓 Students </a>
+
+          <a href="{{ url_for('search_student') }}"> 🔍 Search Student </a>
+
+          <a href="{{ url_for('growth_tracker') }}"> 📈 Growth Tracker </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <a href="#"> ⚙ Settings </a>
+
+          <a href="{{ url_for('logout') }}"> 🚪 Logout </a>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+
+      <main class="main-content">
+        <!-- Top Bar -->
+
+        <header class="topbar">
+          <div>
+            <h1>Dashboard</h1>
+            <p>Student Management System</p>
+          </div>
+
+          <div class="user-info">👤 {{ session['user'] }}</div>
+        </header>
+
+        <!-- Welcome -->
+
+        <section class="welcome">
+          <h2>Welcome back, {{ session['user'] }}! 👋</h2>
+
+          <p>Here's an overview of your student management system.</p>
+        </section>
+
+        <!-- Statistics -->
+
+        <section class="stats">
+          <div class="card students-card">
+            <div class="card-icon">👨‍🎓</div>
+
+            <div>
+              <h2>{{ total_students }}</h2>
+              <p>Total Students</p>
             </div>
+          </div>
 
-            <h2>Student Management</h2>
+          <div class="card department-card">
+            <div class="card-icon">📚</div>
 
-            <nav>
-
-                <a href="{{ url_for('dashboard') }}" class="active">
-                    🏠 Dashboard
-                </a>
-
-                <a href="{{ url_for('add_student') }}">
-                    ➕ Add Student
-                </a>
-
-                <a href="#">
-                    👨‍🎓 Students
-                </a>
-
-                <a href="#">
-                    🔍 Search Student
-                </a>
-
-                <a href="#">
-                    📈 Growth Tracker
-                </a>
-
-            </nav>
-
-            <div class="sidebar-bottom">
-
-                <a href="#">
-                    ⚙ Settings
-                </a>
-
-                <a href="{{ url_for('logout') }}">
-                    🚪 Logout
-                </a>
-
+            <div>
+              <h3>5</h3>
+              <p>Departments</p>
             </div>
-
-        </aside>
-
-
-        <!-- Main Content -->
-
-        <main class="main-content">
-
-            <!-- Top Bar -->
-
-            <header class="topbar">
-
-                <div>
-                    <h1>Dashboard</h1>
-                    <p>Student Management System</p>
-                </div>
-
-                <div class="user-info">
-                    👤 {{ session['user'] }}
-                </div>
-
-            </header>
-
-
-            <!-- Welcome -->
-
-            <section class="welcome">
-
-                <h2>
-                    Welcome back, {{ session['user'] }}! 👋
-                </h2>
-
-                <p>
-                    Here's an overview of your student management system.
-                </p>
-
-            </section>
-
-
-            <!-- Statistics -->
-
-            <section class="stats">
-
-                <div class="card students-card">
-
-                    <div class="card-icon">
-                        👨‍🎓
-                    </div>
-
-                    <div>
-                        <h2>{{ total_students }}</h2>
-                        <p>Total Students</p>
-                    </div>
-
-                </div>
-
-
-                <div class="card department-card">
-
-                    <div class="card-icon">
-                        📚
-                    </div>
-
-                    <div>
-                        <h3>5</h3>
-                        <p>Departments</p>
-                    </div>
-
-                </div>
-
-
-                <div class="card performance-card">
-
-                    <div class="card-icon">
-                        📊
-                    </div>
-
-                    <div>
-                        <h3>82%</h3>
-                        <p>Average Performance</p>
-                    </div>
-
-                </div>
-
-
-                <div class="card growth-card">
-
-                    <div class="card-icon">
-                        📈
-                    </div>
-
-                    <div>
-                        <h3>15%</h3>
-                        <p>Growth This Year</p>
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- Quick Actions -->
-
-            <section class="section">
-
-                <h2>Quick Actions</h2>
-
-                <div class="quick-actions">
-
-                    <a href="{{ url_for('add_student') }}"
-                       class="action add">
-
-                        <span>➕</span>
-
-                        <div>
-                            <h3>Add Student</h3>
-                            <p>Add a new student record</p>
-                        </div>
-
-                    </a>
-
-                    <a href="{{ url_for('search_student') }}"
-                            class="action search">
-
-                        <span>🔍</span>
-
-                       <a href="{{ url_for('search_student') }}">
-                                             🔍 Search Student
-                                        </a>
-                        </div>
-
-                    </a>
-
-
-                    <a href="#"
-                       class="action growth">
-
-                        <span>📈</span>
-
-                        <div>
-                            <h3>Growth Tracker</h3>
-                            <p>Track student progress</p>
-                        </div>
-
-                    </a>
-
-                </div>
-
-            </section>
-
-
-            <!-- Recent Students -->
-
-            <section class="section">
-
-                <div class="section-heading">
-
-                    <h2>Recent Students</h2>
-
-                    <a href="#">
-                        View All →
-                    </a>
-
-                </div>
-
-
-                <div class="table-container">
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-                                <th>Roll No</th>
-                                <th>Name</th>
-                                <th>Department</th>
-                                <th>Semester</th>
-                                <th>Status</th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            <tr>
-                                <td>101</td>
-                                <td>Rahul</td>
-                                <td>Computer Science</td>
-                                <td>5</td>
-                                <td>
-                                    <span class="status active-status">
-                                        Active
-                                    </span>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>102</td>
-                                <td>Priya</td>
-                                <td>Information Technology</td>
-                                <td>4</td>
-                                <td>
-                                    <span class="status active-status">
-                                        Active
-                                    </span>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>103</td>
-                                <td>Arun</td>
-                                <td>Mechanical</td>
-                                <td>6</td>
-                                <td>
-                                    <span class="status active-status">
-                                        Active
-                                    </span>
-                                </td>
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </section>
-
-        </main>
-
+          </div>
+
+          <div class="card performance-card">
+            <div class="card-icon">📊</div>
+
+            <div>
+              <h3>82%</h3>
+              <p>Average Performance</p>
+            </div>
+          </div>
+
+          <div class="card growth-card">
+            <div class="card-icon">📈</div>
+
+            <div>
+              <h3>15%</h3>
+              <p>Growth This Year</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Quick Actions -->
+
+        <section class="section">
+          <h2>Quick Actions</h2>
+
+          <div class="quick-actions">
+            <a href="{{ url_for('add_student') }}" class="action add">
+              <span>➕</span>
+
+              <div>
+                <h3>Add Student</h3>
+                <p>Add a new student record</p>
+              </div>
+            </a>
+
+            <a href="{{ url_for('search_student') }}" class="action search">
+              <span>🔍</span>
+
+              <div>
+                <h3>Search Student</h3>
+                <p>Find a student record</p>
+              </div>
+            </a>
+
+            <a href="{{ url_for('growth_tracker') }}" class="action growth">
+              <span>📈</span>
+
+              <div>
+                <h3>Growth Tracker</h3>
+                <p>Track student progress</p>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <!-- Recent Students -->
+
+        <section class="section">
+          <div class="section-heading">
+            <h2>Recent Students</h2>
+
+            <a href="{{ url_for('students') }}"> View All → </a>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Roll No</th>
+                  <th>Name</th>
+                  <th>Department</th>
+                  <th>Semester</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {% for student in recent_students %}
+
+                <tr>
+                  <td>{{ student.roll_no }}</td>
+                  <td>{{ student.name }}</td>
+                  <td>{{ student.department }}</td>
+                  <td>{{ student.semester }}</td>
+                  <td>
+                    <span class="status active-status"> Active </span>
+                  </td>
+                </tr>
+
+                {% else %}
+
+                <tr>
+                  <td colspan="5">No students yet.</td>
+                </tr>
+
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
     </div>
-
-</body>
-
+  </body>
 </html>
