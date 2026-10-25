@@ -1,3 +1,5 @@
+import re
+
 from flask import Flask, render_template, request, redirect, url_for, session
 from database import get_connection
 from dotenv import load_dotenv
@@ -56,12 +58,42 @@ def add_student():
 
     if request.method == 'POST':
 
-        roll_no = request.form['roll_no']
-        name = request.form['name']
-        department = request.form['department']
-        semester = request.form['semester']
-        email = request.form['email']
-        phone = request.form['phone']
+        # Read and normalize form values before attempting a database insert.
+        student = {
+            field: request.form.get(field, '').strip()
+            for field in ('roll_no', 'name', 'department', 'semester', 'email', 'phone')
+        }
+
+        if any(not value for value in student.values()):
+            return render_template(
+                'add_student.html',
+                error='All student fields are required.'
+            ), 400
+
+        if student['semester'] not in {str(number) for number in range(1, 9)}:
+            return render_template(
+                'add_student.html',
+                error='Semester must be a number between 1 and 8.'
+            ), 400
+
+        if not re.fullmatch(r'[^@\s]+@[^@\s]+\.[^@\s]+', student['email']):
+            return render_template(
+                'add_student.html',
+                error='Please enter a valid email address.'
+            ), 400
+
+        if not re.fullmatch(r'\+?[0-9]{10,15}', student['phone']):
+            return render_template(
+                'add_student.html',
+                error='Phone number must contain 10 to 15 digits, optionally starting with +.'
+            ), 400
+
+        roll_no = student['roll_no']
+        name = student['name']
+        department = student['department']
+        semester = student['semester']
+        email = student['email']
+        phone = student['phone']
 
         connection = get_connection()
         cursor = connection.cursor()

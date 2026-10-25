@@ -1,3 +1,5 @@
+import pytest
+
 def test_login_page_loads(client):
     response = client.get("/login")
     assert response.status_code == 200
@@ -56,6 +58,38 @@ def test_add_student_creates_record(logged_in_client, sqlite_connection):
     ).fetchone()
 
     assert row["name"] == "Arun"
+
+
+@pytest.mark.parametrize(
+    ("overrides", "expected_error"),
+    [
+        ({"email": ""}, "All student fields are required."),
+        ({"email": "not-an-email"}, "Please enter a valid email address."),
+        ({"semester": "9"}, "Semester must be a number between 1 and 8."),
+        ({"phone": "12345"}, "Phone number must contain 10 to 15 digits"),
+    ],
+)
+def test_add_student_rejects_invalid_data(
+    logged_in_client, sqlite_connection, overrides, expected_error
+):
+    data = {
+        "roll_no": "202",
+        "name": "Arun",
+        "department": "Mechanical",
+        "semester": "6",
+        "email": "arun@example.com",
+        "phone": "7777777777",
+    }
+    data.update(overrides)
+
+    response = logged_in_client.post("/add_student", data=data)
+
+    assert response.status_code == 400
+    assert expected_error.encode() in response.data
+    row = sqlite_connection.execute(
+        "SELECT * FROM students WHERE roll_no = ?", ("202",)
+    ).fetchone()
+    assert row is None
 
 
 def test_search_student_finds_match(logged_in_client, sqlite_connection):

@@ -28,6 +28,10 @@
             </p>
 
 
+            {% if error %}
+                <p class="error-message" role="alert">{{ error }}</p>
+            {% endif %}
+
             <form action="{{ url_for('add_student') }}"
                   method="POST">
 
@@ -158,6 +162,7 @@
                         id="email"
                         name="email"
                         placeholder="Enter email"
+                        required
                     >
 
                 </div>
@@ -176,6 +181,7 @@
                         id="phone"
                         name="phone"
                         placeholder="Enter phone number"
+                        required
                     >
 
                 </div>
